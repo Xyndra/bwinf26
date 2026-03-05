@@ -1,3 +1,5 @@
 build/
 esp/
 managed_components/
+.pc_pwd
+.cache

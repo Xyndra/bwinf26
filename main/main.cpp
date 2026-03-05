@@ -22,8 +22,10 @@
 #include "config.h"
 #include "helper.h"
 #include "interface.h"
+#include "map_visualizer.h"
 #include "nvs_flash.h"
 #include "sensor.h"
+#include "main.h"
 
 GxEPD2_BW<WatchyDisplay, WatchyDisplay::HEIGHT> display(
     WatchyDisplay(DISPLAY_CS, DISPLAY_DC, DISPLAY_RES, DISPLAY_BUSY));
@@ -40,22 +42,10 @@ int car_x = 50;  // car position in map coords (0-100, origin = top-left)
 int car_y = 50;
 int car_angle = 270;
 
-struct barrier {
-    int x, y, angle;
-};
-std::vector<barrier> barriers;  // obstacle ring buffer
-
 void set_car_position(int x, int y, int angle) {
     car_x = x;
     car_y = y;
     car_angle = angle + 180;
-}
-
-// Oldest point is dropped when buffer is full
-void add_barrier(int x, int y, int angle) {
-    if (barriers.size() >= MAX_OBSTACLES)
-        barriers.erase(barriers.begin());
-    barriers.push_back({x, y, angle});
 }
 
 // Configure GPIO pins and show the startup screen
@@ -78,14 +68,6 @@ void initDisplay() {
     // display.setCursor(0, 75);
     // display.print("Press\nTop Right\nto Start!");
     display.display(false);
-}
-
-// Show 'D' (driving) or 'P' (parked) in the top-right corner
-void draw_motor() {
-    char clear = motor_on ? 'P' : 'D';
-    char show = motor_on ? 'D' : 'P';
-    display.drawChar(180, 30, clear, GxEPD_WHITE, GxEPD_WHITE, 1);
-    display.drawChar(180, 30, show, GxEPD_BLACK, GxEPD_WHITE, 1);
 }
 
 // Init WiFi in station mode (required before ESP-NOW)
@@ -127,25 +109,7 @@ void map_task(void* pvParameters) {
 
     while (1) {
         display.fillScreen(GxEPD_WHITE);
-
-        // Draw car as a triangle pointing in car_angle direction
-        double rad = car_angle * M_PI / 180.0;
-        int cx = car_x * MAP_TO_DISPLAY_SCALE;
-        int cy = car_y * MAP_TO_DISPLAY_SCALE;
-        int x0 = cx + CAR_TRIANGLE_SIZE * cos(rad);
-        int y0 = cy - CAR_TRIANGLE_SIZE * sin(rad);
-        int x1 = cx - CAR_TRIANGLE_SIZE * (cos(rad) + sin(rad));
-        int y1 = cy + CAR_TRIANGLE_SIZE * (sin(rad) + cos(rad));
-        int x2 = cx - CAR_TRIANGLE_SIZE * (cos(rad) - sin(rad));
-        int y2 = cy + CAR_TRIANGLE_SIZE * (sin(rad) - cos(rad));
-        display.fillTriangle(x0, y0, x1, y1, x2, y2, GxEPD_BLACK);
-
-        draw_motor();
-
-        // Draw obstacles as dots
-        for (const auto& b : barriers)
-            display.fillCircle(b.x * MAP_TO_DISPLAY_SCALE, b.y * MAP_TO_DISPLAY_SCALE,
-                               OBSTACLE_DOT_RADIUS, GxEPD_BLACK);
+        draw_map();
 
         // E-paper needs occasional full refresh to avoid ghosting
         if (partial_refresh_counter < PARTIAL_REFRESH_LIMIT) {

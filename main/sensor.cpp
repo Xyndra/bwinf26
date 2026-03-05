@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "config.h"
+#include "map_visualizer.h"
 
 // Map origin (center of 0-100 coordinate space) and initial heading (up)
 constexpr double offset_pos_x = 50;
@@ -59,7 +60,7 @@ void sensor_task(void* pvParameters) {
             double obs_angle = angle_z / 360.0 * 2.0 * M_PI;
             int obs_x = pos_x + sensor_data_buffer.lidar_distance * cos(obs_angle);
             int obs_y = pos_y + sensor_data_buffer.lidar_distance * sin(obs_angle);
-            add_barrier(obs_x, obs_y, 0);
+            add_point(obs_x, obs_y);
         }
     }
 }
