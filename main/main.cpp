@@ -30,7 +30,7 @@ GxEPD2_BW<WatchyDisplay, WatchyDisplay::HEIGHT> display(
 
 BMA423 sensor;  // accelerometer (configured in helper.h)
 
-uint8_t rover_mac[] = CAR2_MAC;  // MAC of the car this watch controls
+uint8_t rover_mac[] = CAR1_MAC;  // MAC of the car this watch controls
 
 SemaphoreHandle_t xSemaphoreCarUpdate;
 SemaphoreHandle_t xSemaphoreMotorControl;

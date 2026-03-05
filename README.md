@@ -9,12 +9,7 @@ Firmware for the [Watchy](https://watchy.sqfmi.com/) smartwatch that controls a 
    ./local_setup.sh
    ```
 
-2. **Set your car's MAC address** in [main/config.h](main/config.h):
-   ```c
-   uint8_t rover_mac[] = CAR1_MAC;  // or CAR2_MAC
-   ```
-
-3. **Build, flash, and monitor**:
+2. **Build, flash, and monitor**:
    ```bash
    ./run.sh
    ```
