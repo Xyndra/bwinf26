@@ -1,0 +1,13 @@
+CompileFlags:
+    Add:
+        - --target=xtensa-esp32-elf
+        - -isystem/~/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/xtensa-esp32-elf/include/c++/12.2.0
+        - -isystem/~/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/xtensa-esp32-elf/include/c++/12.2.0/xtensa-esp32-elf
+        - -isystem/~/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/xtensa-esp32-elf/sys-include
+        - -isystem/~/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/xtensa-esp32-elf/include
+    Remove:
+        - -mlongcalls
+        - -fstrict-volatile-bitfields
+        - -fno-tree-switch-conversion
+        - -fno-jump-tables
+    CompilationDatabase: ./build
