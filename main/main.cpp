@@ -19,6 +19,7 @@
 #include <freertos/task.h>
 #include <string.h>
 
+#include "Esp.h"
 #include "config.h"
 #include "helper.h"
 #include "interface.h"
@@ -217,6 +218,8 @@ extern "C" void app_main() {
     ESP_ERROR_CHECK(gpio_isr_handler_add((gpio_num_t)BTN_TOP_RIGHT, toggle_motor, NULL));
     ESP_ERROR_CHECK(gpio_set_intr_type((gpio_num_t)BTN_TOP_LEFT, GPIO_INTR_NEGEDGE));
     ESP_ERROR_CHECK(gpio_isr_handler_add((gpio_num_t)BTN_TOP_LEFT, reset_watch, NULL));
+    ESP_ERROR_CHECK(gpio_set_intr_type((gpio_num_t)BTN_BOTTOM_RIGHT, GPIO_INTR_NEGEDGE));
+    ESP_ERROR_CHECK(gpio_isr_handler_add((gpio_num_t)BTN_BOTTOM_RIGHT, toggle_draw_mode, NULL));
 
     xTaskCreate(setup, "setup", TASK_STACK_SIZE, NULL, configMAX_PRIORITIES, NULL);
     vTaskStartScheduler();

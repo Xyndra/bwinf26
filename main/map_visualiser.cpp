@@ -23,16 +23,30 @@ void draw_car(int x, int y) {
        100, 100 - CAR_TRIANGLE_SIZE,
        100 - CAR_TRIANGLE_SIZE, 100 + CAR_TRIANGLE_SIZE, GxEPD_BLACK);
 }
+
+bool new_draw_mode = true;
+static void toggle_draw_mode(void* args) {
+    new_draw_mode = !new_draw_mode;
+}
+
 void draw_points() {
-    for (const auto& b : barriers) {
+    if (new_draw_mode) {
         double rad = car_angle * M_PI / 180.0;
-        // Translate barrier relative to car position, then scale
-        double dx = (b.x - car_x) * MAP_TO_DISPLAY_SCALE;
-        double dy = (b.y - car_y) * MAP_TO_DISPLAY_SCALE;
-        // Rotate around the static car display center (100, 100)
-        int screen_x = 100 + (int)(dx * cos(rad) - dy * sin(rad));
-        int screen_y = 100 + (int)(dx * sin(rad) + dy * cos(rad));
-        display.fillCircle(screen_x, screen_y, OBSTACLE_DOT_RADIUS, GxEPD_BLACK);
+        for (const auto& b : barriers) {
+            // Translate barrier relative to car position, then scale
+            double dx = (b.x - car_x) * MAP_TO_DISPLAY_SCALE;
+            double dy = (b.y - car_y) * MAP_TO_DISPLAY_SCALE;
+            // Rotate around the static car display center (100, 100)
+            int screen_x = 100 + (int)(dx * cos(rad) - dy * sin(rad));
+            int screen_y = 100 + (int)(dx * sin(rad) + dy * cos(rad));
+            display.fillCircle(screen_x, screen_y, OBSTACLE_DOT_RADIUS, GxEPD_BLACK);
+        }
+    } else {
+        for (const auto& b : barriers) {
+            int screen_x = (int)(b.x * MAP_TO_DISPLAY_SCALE);
+            int screen_y = (int)(b.y * MAP_TO_DISPLAY_SCALE);
+            display.fillCircle(screen_x, screen_y, OBSTACLE_DOT_RADIUS, GxEPD_BLACK);
+        }
     }
 }
 // Show 'D' (driving) or 'P' (parked) in the top-right corner
