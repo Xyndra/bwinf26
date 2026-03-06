@@ -19,9 +19,9 @@ void add_point(int x, int y) {
 }
 
 void draw_car(int x, int y) {
-    display.fillTriangle(100 + CAR_TRIANGLE_SIZE, 100 - CAR_TRIANGLE_SIZE,
-       100, 100 + CAR_TRIANGLE_SIZE,
-       100 - CAR_TRIANGLE_SIZE, 100 - CAR_TRIANGLE_SIZE, GxEPD_BLACK);
+    display.fillTriangle(100 + CAR_TRIANGLE_SIZE, 100 + CAR_TRIANGLE_SIZE,
+       100, 100 - CAR_TRIANGLE_SIZE,
+       100 - CAR_TRIANGLE_SIZE, 100 + CAR_TRIANGLE_SIZE, GxEPD_BLACK);
 }
 void draw_points() {
     for (const auto& b : barriers) {
